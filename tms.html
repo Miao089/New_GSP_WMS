@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3PL冷链与交接 - 医疗器械 GSP 合规 WMS & TMS 原型系统</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- App Shell -->
+  <div class="app-container">
+    
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- View Content -->
+      <div class="view-wrapper">
+        <section id="view-tms" class="content-view active-view">
+          
+          <div class="tms-grid">
+            <!-- Left Side: Order Shipment List -->
+            <div class="glass-panel tms-shipment-panel">
+              <div class="panel-header">
+                <h3><i class="fa-solid fa-truck"></i> 3PL 运单管理与发运交接</h3>
+              </div>
+              <div class="order-list" id="tms-shipment-list">
+                <!-- Rendered dynamically by JS -->
+              </div>
+            </div>
+
+            <!-- Right Side: Cold Chain Tracking and Handover -->
+            <div class="glass-panel tms-workbench-panel">
+              <div class="panel-header">
+                <h3><i class="fa-solid fa-chart-line"></i> 冷链在途追溯与 3PL 交接验证</h3>
+                <span class="badge info-badge" id="tms-active-waybill-id">未选择运单</span>
+              </div>
+              
+              <div id="tms-workbench-empty" class="workbench-empty-state">
+                <i class="fa-solid fa-truck-ramp-box"></i>
+                <p>请在左侧选择需要跟进的 3PL 运单，查看在途冷链轨迹、温度曲线与移交记录</p>
+              </div>
+
+              <div id="tms-workbench-active" class="tms-workbench-active hidden">
+                <!-- Transit Status Card -->
+                <div class="transit-status-card">
+                  <div class="tms-row">
+                    <div><b>承运商:</b> <span id="tms-val-carrier">--</span> <span class="badge badge-green" id="tms-val-carrier-status">资质合格</span></div>
+                    <div><b>物流单号:</b> <span id="tms-val-waybill">--</span></div>
+                  </div>
+                  <div class="tms-row">
+                    <div><b>出发温度:</b> <span id="tms-val-start-temp">--</span></div>
+                    <div><b>当前状态:</b> <span class="badge info-badge" id="tms-val-status">--</span></div>
+                  </div>
+                </div>
+
+                <!-- Temperature chart -->
+                <div class="tms-chart-container">
+                  <div class="chart-title"><i class="fa-solid fa-clock-rotate-left"></i> 冷链车辆/保温箱 实时温度折线图（API 推送）</div>
+                  <canvas id="tms-temp-chart"></canvas>
+                </div>
+
+                <!-- GSP Handover Verification -->
+                <div class="tms-handover-form">
+                  <div class="form-title">GSP 收货方移交记录签署</div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>交接接收人签名</label>
+                      <input type="text" id="tms-signee" value="李晓华 (人民医院药剂科)">
+                    </div>
+                    <div class="form-group">
+                      <label>交接温度 (实测)</label>
+                      <input type="text" id="tms-handover-temp" value="5.1 ℃">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>冷箱密封条编号</label>
+                      <input type="text" id="tms-seal-no" value="SF-SEAL-9874">
+                    </div>
+                    <div class="form-group">
+                      <label>交接判断结果</label>
+                      <select id="tms-judgment">
+                        <option value="合格">合格（温度无超限）</option>
+                        <option value="待验">待验（温度有异常）</option>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div class="action-buttons-row" style="margin-top: 15px;">
+                    <button class="btn btn-success" id="btn-tms-sign"><i class="fa-regular fa-pen-to-square"></i> 签署电子交接单并签收</button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </section>
+      </div>
+    </main>
+
+  </div>
+
+  <script type="module" src="layout.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

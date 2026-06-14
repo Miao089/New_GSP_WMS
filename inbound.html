@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>采购入库验收 - 医疗器械 GSP 合规 WMS & TMS 原型系统</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- App Shell -->
+  <div class="app-container">
+    
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- View Content -->
+      <div class="view-wrapper">
+        <section id="view-inbound" class="content-view active-view">
+          
+          <div class="inbound-grid">
+            
+            <!-- Left Side: Inbound Orders Sync from Kingdee -->
+            <div class="glass-panel inbound-orders-panel">
+              <div class="panel-header">
+                <h3><i class="fa-solid fa-list-check"></i> 采购入库通知单 (中间表同步)</h3>
+              </div>
+              <div class="order-list" id="inbound-order-list">
+                <!-- Rendered by JS -->
+              </div>
+            </div>
+            
+            <!-- Right Side: GSP Acceptance Workbench -->
+            <div class="glass-panel inbound-workbench-panel">
+              <div class="panel-header">
+                <h3><i class="fa-solid fa-microscope"></i> GSP 验收与上架工作台</h3>
+                <span class="badge info-badge" id="workbench-active-order-id">未选择单据</span>
+              </div>
+              
+              <div id="inbound-workbench-empty" class="workbench-empty-state">
+                <i class="fa-solid fa-barcode"></i>
+                <p>请在左侧选择一个待处理的采购入库通知单，启动 GSP 扫码验收流程</p>
+              </div>
+
+              <div id="inbound-workbench-active" class="workbench-active-state hidden">
+                <!-- Inbound Basic Info Form -->
+                <div class="gsp-validation-form">
+                  <div class="form-title">GSP 验收基本信息录入</div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>随货同行单号</label>
+                      <input type="text" id="in-invoice-no" value="INV-SF889021">
+                    </div>
+                    <div class="form-group">
+                      <label>运输车辆车牌号</label>
+                      <input type="text" id="in-car-plate" value="苏A-8898C">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>随货温湿度值</label>
+                      <input type="text" id="in-temp-val" value="5.2 ℃">
+                    </div>
+                    <div class="form-group">
+                      <label>冷链箱ID/记录仪号</label>
+                      <input type="text" id="in-box-id" value="BOX-0048">
+                    </div>
+                  </div>
+                </div>
+
+                <!-- UDI Scan Workbench -->
+                <div class="scan-bar-section">
+                  <label for="udi-scan-input"><b>扫描 UDI 条码 (可手动输入测试)：</b></label>
+                  <div class="input-scan-group">
+                    <input type="text" id="udi-scan-input" placeholder="请扫描或粘贴 UDI 条码..." autocomplete="off">
+                    <button class="btn btn-primary" id="btn-parse-udi"><i class="fa-solid fa-magnifying-glass"></i> 解析校验</button>
+                  </div>
+                  
+                  <!-- Demo barcode presets -->
+                  <div class="barcode-presets">
+                    <span class="preset-label">测试用例模拟扫码：</span>
+                    <button class="badge preset-btn" id="preset-bone-plate">骨科接骨板 (III类)</button>
+                    <button class="badge preset-btn" id="preset-reagent">诊断试剂 (II类-冷链)</button>
+                    <button class="badge preset-btn" id="preset-syringe">注射器 (II类-常温)</button>
+                  </div>
+                </div>
+
+                <!-- Parsed Results Container -->
+                <div id="udi-parse-result" class="udi-parse-result-card hidden">
+                  <!-- JS dynamically populates -->
+                </div>
+
+                <!-- Action Bar -->
+                <div class="workbench-action-bar hidden" id="inbound-action-bar">
+                  <div class="gsp-verdict">
+                    <span>验收结论：</span>
+                    <label class="radio-label"><input type="radio" name="gsp-verdict-val" value="合格" checked> <span>符合规定（合格）</span></label>
+                    <label class="radio-label text-red"><input type="radio" name="gsp-verdict-val" value="不合格"> <span>不符合规定（拒收）</span></label>
+                  </div>
+                  
+                  <!-- Putaway Suggestions -->
+                  <div class="putaway-suggestion-banner" id="putaway-suggestion-banner">
+                    <!-- Suggested Location -->
+                  </div>
+
+                  <div class="buttons">
+                    <button class="btn btn-secondary" id="btn-cancel-inbound">取消</button>
+                    <button class="btn btn-success" id="btn-submit-inbound" disabled><i class="fa-solid fa-circle-check"></i> 提交验收并上架</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+      </div>
+    </main>
+
+  </div>
+
+  <script type="module" src="layout.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

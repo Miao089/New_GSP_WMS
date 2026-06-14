@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>数字化大屏 - 医疗器械 GSP 合规 WMS & TMS 原型系统</title>
+  <meta name="description" content="医疗器械 WMS & TMS 数字化大屏，显示仓储容量、GSP预警及金蝶ERP同步状态。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- App Shell -->
+  <div class="app-container">
+    
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- View Content -->
+      <div class="view-wrapper">
+        <section id="view-dashboard" class="content-view active-view">
+          
+          <!-- Stats Summary Grid -->
+          <div class="stats-grid">
+            <div class="stat-card glass-panel">
+              <div class="stat-icon purple"><i class="fa-solid fa-boxes-stacked"></i></div>
+              <div class="stat-info">
+                <h3>在库总器械</h3>
+                <div class="stat-value" id="dash-total-qty">-- <span>件</span></div>
+              </div>
+            </div>
+            
+            <div class="stat-card glass-panel">
+              <div class="stat-icon blue"><i class="fa-solid fa-triangle-exclamation"></i></div>
+              <div class="stat-info">
+                <h3>GSP 预警资质</h3>
+                <div class="stat-value warning" id="dash-warn-qual">-- <span>项</span></div>
+              </div>
+            </div>
+            
+            <div class="stat-card glass-panel">
+              <div class="stat-icon green"><i class="fa-solid fa-snowflake"></i></div>
+              <div class="stat-info">
+                <h3>冷藏库温度</h3>
+                <div class="stat-value text-green" id="dash-cold-temp">--<span>℃</span></div>
+              </div>
+            </div>
+            
+            <div class="stat-card glass-panel">
+              <div class="stat-icon orange"><i class="fa-solid fa-truck-fast"></i></div>
+              <div class="stat-info">
+                <h3>在途冷链运单</h3>
+                <div class="stat-value text-blue" id="dash-tms-orders">-- <span>单</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mid Dashboard Section -->
+          <div class="dashboard-mid-grid">
+            
+            <!-- Temperature Monitor Panel -->
+            <div class="glass-panel temp-monitor-panel">
+              <div class="panel-header">
+                <h3><i class="fa-solid fa-temperature-half"></i> 多温区实时温湿度监测</h3>
+                <span class="badge live-badge">实时数据</span>
+              </div>
+              <div class="temp-zones-grid">
+                
+                <div class="temp-zone-card">
+                  <div class="zone-name">常温库 (10-30℃)</div>
+                  <div class="zone-metrics">
+                    <div class="metric">
+                      <span class="val" id="sensor-normal-t">22.4℃</span>
+                      <span class="lbl">温度</span>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="metric">
+                      <span class="val" id="sensor-normal-h">45%</span>
+                      <span class="lbl">湿度</span>
+                    </div>
+                  </div>
+                  <div class="zone-status-bar safe">符合 GSP 规范</div>
+                </div>
+
+                <div class="temp-zone-card">
+                  <div class="zone-name">阴凉库 (0-20℃)</div>
+                  <div class="zone-metrics">
+                    <div class="metric">
+                      <span class="val" id="sensor-cool-t">14.8℃</span>
+                      <span class="lbl">温度</span>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="metric">
+                      <span class="val" id="sensor-cool-h">51%</span>
+                      <span class="lbl">湿度</span>
+                    </div>
+                  </div>
+                  <div class="zone-status-bar safe">符合 GSP 规范</div>
+                </div>
+
+                <div class="temp-zone-card" id="card-cold-store">
+                  <div class="zone-name">冷藏库 (2-8℃)</div>
+                  <div class="zone-metrics">
+                    <div class="metric">
+                      <span class="val" id="sensor-cold-t">4.5℃</span>
+                      <span class="lbl">温度</span>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="metric">
+                      <span class="val" id="sensor-cold-h">60%</span>
+                      <span class="lbl">湿度</span>
+                    </div>
+                  </div>
+                  <div class="zone-status-bar safe" id="bar-cold-store">符合 GSP 规范</div>
+                </div>
+
+                <div class="temp-zone-card">
+                  <div class="zone-name">冷冻库 (-15 ~ -25℃)</div>
+                  <div class="zone-metrics">
+                    <div class="metric">
+                      <span class="val" id="sensor-freeze-t">-18.2℃</span>
+                      <span class="lbl">温度</span>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="metric">
+                      <span class="val" id="sensor-freeze-h">--</span>
+                      <span class="lbl">湿度</span>
+                    </div>
+                  </div>
+                  <div class="zone-status-bar safe">符合 GSP 规范</div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- ERP Intermediate DB Status -->
+            <div class="glass-panel erp-monitor-panel">
+              <div class="panel-header">
+                <h3><i class="fa-solid fa-database"></i> 金蝶 ERP 数据同步看板</h3>
+              </div>
+              <div class="sync-flow">
+                <div class="sync-node">
+                  <div class="node-icon"><i class="fa-solid fa-server"></i></div>
+                  <span>金蝶 ERP</span>
+                </div>
+                <div class="sync-arrow">
+                  <span class="arrow-line"></span>
+                  <span class="arrow-tip"></span>
+                  <div class="pulse-signal"></div>
+                </div>
+                <div class="sync-node highlighted">
+                  <div class="node-icon"><i class="fa-solid fa-share-nodes"></i></div>
+                  <span>WMS 中间库</span>
+                </div>
+                <div class="sync-arrow">
+                  <span class="arrow-line"></span>
+                  <span class="arrow-tip"></span>
+                  <div class="pulse-signal"></div>
+                </div>
+                <div class="sync-node">
+                  <div class="node-icon"><i class="fa-solid fa-warehouse"></i></div>
+                  <span>WMS 系统</span>
+                </div>
+              </div>
+              <div class="sync-logs">
+                <div class="logs-header">实时同步事件流:</div>
+                <div class="logs-content" id="erp-sync-logs-list">
+                  <!-- JS updates -->
+                </div>
+              </div>
+            </div>
+            
+          </div>
+
+          <!-- Notifications & Alerts -->
+          <div class="glass-panel alert-section">
+            <div class="panel-header">
+              <h3><i class="fa-solid fa-triangle-exclamation text-yellow"></i> 异常与预警卡控中心</h3>
+            </div>
+            <div class="alert-list" id="dashboard-alert-list">
+              <!-- JS updates -->
+            </div>
+          </div>
+
+        </section>
+      </div>
+    </main>
+
+  </div>
+
+  <script type="module" src="layout.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

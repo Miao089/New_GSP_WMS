@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>库内可视化大屏 - 医疗器械 GSP 合规 WMS & TMS 原型系统</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- App Shell -->
+  <div class="app-container">
+    
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- View Content -->
+      <div class="view-wrapper">
+        <section id="view-inventory" class="content-view active-view">
+          
+          <div class="inventory-layout">
+            <!-- Left Side: Interactive Warehouse Grid -->
+            <div class="glass-panel warehouse-grid-panel">
+              <div class="panel-header">
+                <h3><i class="fa-solid fa-map"></i> 数字化立体货位大屏</h3>
+                <div class="legend">
+                  <span class="legend-item"><span class="color normal"></span> 常温区</span>
+                  <span class="legend-item"><span class="color cool"></span> 阴凉区</span>
+                  <span class="legend-item"><span class="color cold"></span> 冷藏区</span>
+                  <span class="legend-item"><span class="color freeze"></span> 冷冻区</span>
+                  <span class="legend-item"><span class="color locked"></span> 已锁定</span>
+                </div>
+              </div>
+              
+              <!-- Warehouse grid rendered by JS -->
+              <div class="warehouse-floors" id="warehouse-grid-container">
+                <!-- Rendered dynamically -->
+              </div>
+            </div>
+
+            <!-- Right Side: Location Info & Lock Panel -->
+            <div class="glass-panel shelf-details-panel">
+              <div class="panel-header">
+                <h3><i class="fa-solid fa-magnifying-glass-chart"></i> 货位明细及库存状态控制</h3>
+              </div>
+              
+              <div id="shelf-details-empty" class="workbench-empty-state">
+                <i class="fa-solid fa-hand-pointer"></i>
+                <p>请点击左侧可视化货位，查看其中存储的批次与条码明细，进行锁定/解锁卡控操作</p>
+              </div>
+
+              <div id="shelf-details-active" class="shelf-details-active hidden">
+                <div class="detail-header">
+                  <h4 id="detail-loc-name">货位: A-01-01</h4>
+                  <span class="badge" id="detail-loc-zone">常温区</span>
+                </div>
+                
+                <div class="detail-stock-list" id="detail-stock-items">
+                  <!-- Rendered dynamically -->
+                </div>
+                
+                <!-- GSP Audit Lock Control -->
+                <div class="gsp-lock-control-box">
+                  <div class="control-box-title">GSP 状态锁定 / 解锁控制</div>
+                  <p class="gsp-help-text">在医疗器械 GSP 规范下，如发现温控异常或效期疑问，必须立即冻结相关库存并记录追溯日志。</p>
+                  
+                  <div class="form-group">
+                    <label for="lock-reason">变更原因说明 (GSP 审计追踪强制必填):</label>
+                    <textarea id="lock-reason" rows="2" placeholder="请输入移库、锁定或解锁的具体原因..."></textarea>
+                  </div>
+                  
+                  <div class="action-buttons-row">
+                    <button class="btn btn-danger" id="btn-lock-inventory"><i class="fa-solid fa-lock"></i> 批量锁定待验</button>
+                    <button class="btn btn-success" id="btn-unlock-inventory"><i class="fa-solid fa-lock-open"></i> 审计解锁合格</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </section>
+      </div>
+    </main>
+
+  </div>
+
+  <script type="module" src="layout.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

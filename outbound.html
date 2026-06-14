@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>出库复核 FEFO - 医疗器械 GSP 合规 WMS & TMS 原型系统</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- App Shell -->
+  <div class="app-container">
+    
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- View Content -->
+      <div class="view-wrapper">
+        <section id="view-outbound" class="content-view active-view">
+          
+          <div class="outbound-grid">
+            
+            <!-- Left Panel: Outbound Orders list -->
+            <div class="glass-panel outbound-orders-panel">
+              <div class="panel-header">
+                <h3><i class="fa-solid fa-list-ul"></i> 销售出库申请单 (ERP同步)</h3>
+              </div>
+              <div class="order-list" id="outbound-order-list">
+                <!-- Rendered by JS -->
+              </div>
+            </div>
+
+            <!-- Right Panel: Outbound Picking & Recheck Workbench -->
+            <div class="glass-panel outbound-workbench-panel">
+              <div class="panel-header">
+                <h3><i class="fa-solid fa-shipping-fast"></i> 出库复核与 FEFO 拣货工作台</h3>
+                <span class="badge info-badge" id="outbound-active-order-id">未选择单据</span>
+              </div>
+              
+              <div id="outbound-workbench-empty" class="workbench-empty-state">
+                <i class="fa-solid fa-file-invoice"></i>
+                <p>请在左侧选择待处理的销售出库通知单，启动 GSP 校验与 FEFO 拣货流程</p>
+              </div>
+
+              <div id="outbound-workbench-active" class="workbench-active-state hidden">
+                
+                <!-- Client permit verification state -->
+                <div class="qualification-check-banner" id="outbound-client-qual-banner">
+                  <!-- Rendered dynamically -->
+                </div>
+
+                <!-- Order items and FEFO Allocation recommendations -->
+                <div class="fefo-recommendation-section">
+                  <div class="section-title">FEFO（近期先出）拣货推荐与实发复核</div>
+                  <div class="fefo-table-wrapper">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>商品</th>
+                          <th>数量</th>
+                          <th>温区要求</th>
+                          <th>推荐批次(近期)</th>
+                          <th>有效期</th>
+                          <th>已扫复核数</th>
+                          <th>状态</th>
+                        </tr>
+                      </thead>
+                      <tbody id="fefo-recommendation-body">
+                        <!-- JS dynamically builds -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- Outbound Scanning Barcode -->
+                <div class="scan-bar-section" id="outbound-scan-section">
+                  <label for="outbound-udi-scan"><b>出库复核 UDI 扫描：</b></label>
+                  <div class="input-scan-group">
+                    <input type="text" id="outbound-udi-scan" placeholder="扫描商品 UDI 确认批次及 SN..." autocomplete="off">
+                    <button class="btn btn-primary" id="btn-outbound-scan"><i class="fa-solid fa-barcode"></i> 复核确认</button>
+                  </div>
+                  
+                  <div class="barcode-presets">
+                    <span class="preset-label">复核扫码快速输入：</span>
+                    <button class="badge preset-btn" id="out-scan-btn-1">扫描推荐批次板</button>
+                    <button class="badge preset-btn" id="out-scan-btn-2">扫描推荐试剂</button>
+                  </div>
+                </div>
+
+                <!-- Outbound execution logger / details -->
+                <div class="recheck-sn-box hidden" id="recheck-sn-box">
+                  <div class="box-title">已抓取的高风险 SN 序列号明细 (GSP 追溯要求)</div>
+                  <div class="sn-list-tags" id="rechecked-sn-tags">
+                    <!-- Rendered by JS -->
+                  </div>
+                </div>
+
+                <!-- Action buttons -->
+                <div class="workbench-action-bar" id="outbound-action-bar" style="margin-top: 15px;">
+                  <button class="btn btn-secondary" id="btn-cancel-outbound">取消</button>
+                  <button class="btn btn-primary" id="btn-print-invoice" disabled><i class="fa-solid fa-print"></i> 打印随货同行单</button>
+                  <button class="btn btn-success" id="btn-complete-outbound" disabled><i class="fa-solid fa-circle-check"></i> 完成复核出库</button>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+      </div>
+    </main>
+
+  </div>
+
+  <!-- MODAL: GSP 随货同行单打印预览 -->
+  <div class="modal-overlay hidden" id="invoice-modal">
+    <div class="modal-content invoice-modal-content">
+      <div class="modal-header-actions no-print">
+        <h3><i class="fa-solid fa-file-invoice"></i> 随货同行单打印预览 (GSP标准)</h3>
+        <div>
+          <button class="btn btn-secondary" id="btn-close-invoice">关闭</button>
+          <button class="btn btn-primary" onclick="window.print()"><i class="fa-solid fa-print"></i> 打印</button>
+        </div>
+      </div>
+      
+      <!-- Print Area -->
+      <div class="gsp-invoice-print-area" id="print-area">
+        <div class="invoice-title">医疗器械随货同行单 (发货)</div>
+        <div class="invoice-meta-info">
+          <div><b>发货单位：</b> 江苏医疗器械配送有限公司</div>
+          <div><b>发货日期：</b> <span id="print-invoice-date">2026-06-14</span></div>
+          <div><b>收货单位：</b> <span id="print-client-name">南京第一人民医院</span></div>
+          <div><b>出库单号：</b> <span id="print-order-id">SO-20260614002</span></div>
+          <div><b>收货地址：</b> 南京市鼓楼区中山路321号药剂科</div>
+          <div><b>承运商：</b> <span id="print-carrier">顺丰冷运</span></div>
+        </div>
+        
+        <table class="invoice-items-table">
+          <thead>
+            <tr>
+              <th>商品通用名称</th>
+              <th>规格型号</th>
+              <th>单位</th>
+              <th>数量</th>
+              <th>生产批号</th>
+              <th>有效期</th>
+              <th>注册证号/备案凭证</th>
+              <th>生产企业</th>
+            </tr>
+          </thead>
+          <tbody id="print-invoice-rows">
+            <!-- Populated by JS -->
+          </tbody>
+        </table>
+        
+        <div class="invoice-footer-notes">
+          <div class="notes-row">
+            <div><b>运输方式：</b> 冷链保温箱运输</div>
+            <div><b>交接温度：</b> <span id="print-handover-temp">--</span></div>
+            <div><b>保温箱号/箱数：</b> <span id="print-box-id">BOX-0048 / 1箱</span></div>
+          </div>
+          <div class="signature-row" style="margin-top: 30px;">
+            <div>储运部发货员（签字）：___________</div>
+            <div>质量部复核员（签字）：___________</div>
+            <div>收货单位验收员（签字）：___________</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="layout.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

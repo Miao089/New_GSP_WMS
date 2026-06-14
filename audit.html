@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>审计追踪与验证 - 医疗器械 GSP 合规 WMS & TMS 原型系统</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- App Shell -->
+  <div class="app-container">
+    
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- View Content -->
+      <div class="view-wrapper">
+        <section id="view-audit" class="content-view active-view">
+          
+          <div class="audit-grid">
+            <!-- Left Side: GSP Audit Trail Log -->
+            <div class="glass-panel audit-log-panel">
+              <div class="panel-header">
+                <h3><i class="fa-solid fa-book-open"></i> GSP 系统审计追踪日志 (防篡改)</h3>
+                <span class="badge info-badge">只读追加模式</span>
+              </div>
+              <div class="search-bar">
+                <input type="text" id="audit-log-search" placeholder="输入关键字搜索操作日志 (如: 锁定, 验收)...">
+              </div>
+              <div class="audit-logs-container" id="audit-log-list">
+                <!-- Rendered by JS -->
+              </div>
+            </div>
+
+            <!-- Right Side: CVS Testing Sandbox -->
+            <div class="glass-panel cvs-panel">
+              <div class="panel-header">
+                <h3><i class="fa-solid fa-vial-circle-check"></i> 计算机系统验证 (CVS) 测试沙箱</h3>
+              </div>
+              <p class="gsp-help-text" style="margin-bottom: 15px;">
+                模拟 GAMP5 规范下的计算机系统验证，自动跑通各类资质拦截、超限卡控的拦截性逻辑，生成系统合规性报告。
+              </p>
+              
+              <div class="cvs-actions">
+                <button class="btn btn-primary btn-block" id="btn-run-cvs"><i class="fa-solid fa-play"></i> 启动 CVS 一键合规自动验证</button>
+              </div>
+
+              <div class="cvs-results" id="cvs-results-container">
+                <div class="empty-results">
+                  <i class="fa-solid fa-flask"></i>
+                  <p>点击上方按钮，启动计算机系统验证 (CVS) 拦截性测试套件。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </section>
+      </div>
+    </main>
+
+  </div>
+
+  <script type="module" src="layout.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
